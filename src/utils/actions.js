@@ -1,7 +1,6 @@
 import axios from "axios";
  
 
-import authHeader from './auth-header'
 
 const config = {
     headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
@@ -12,13 +11,27 @@ const config = {
 const getCurrent = () => {
 	return axios.get(process.env.REACT_APP_GETCURRENT, config);
   };
+
+
+
+  const nextId = () => {
+	  console.log("next",config);
+	return axios.get(process.env.REACT_APP_NEXTID, config);
+  };
+
+
+  const putCurrent = (identifier) => {
+	  const body = {identifier};
+	  console.log(JSON.stringify(config));
+	  console.log(JSON.stringify(body));
+	return axios.put(process.env.REACT_APP_GETCURRENT,body, config, );
+  };
   
 
-const logout = () => {
-  localStorage.removeItem("user");
-};
+
 
 export default {
 	getCurrent,
-	logout
+	putCurrent,
+	nextId
   };
