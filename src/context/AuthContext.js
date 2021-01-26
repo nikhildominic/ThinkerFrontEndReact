@@ -25,8 +25,9 @@ function login(email, password){
 }
 
 export function AuthProvider({children}) {
-
+	
 	const [currentUser, setCurrentUser] = useState()
+
 	
 	const value = {
 		currentUser,
