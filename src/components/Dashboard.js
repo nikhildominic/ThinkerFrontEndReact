@@ -6,10 +6,12 @@ import { Link, useHistory } from "react-router-dom";
 
 import actions from "../utils/actions";
 
-export default function Dashboard() {
+export default function Dashboard(props) {
+  console.log(props);
   const idRef = useRef();
   const history = useHistory();
   const [content, setContent] = useState("");
+  const [userState, setUserState] = useState(localStorage.getItem("user"));
 
   function handleLogout() {
     localStorage.removeItem("user");
@@ -23,7 +25,7 @@ export default function Dashboard() {
       setError("");
       setLoading(true);
       await actions
-        .putCurrent(idRef.current.value)
+        .putCurrent(idRef.current.value, userState)
         .then((response) => {
           setContent({
             identifier: response.data.identifier,
@@ -47,11 +49,9 @@ export default function Dashboard() {
       setError("");
       setLoading(true);
       await actions
-        .nextId()
+        .nextId(userState)
         .then((response) => {
-          setContent(
-            response.data,
-          );
+          setContent(response.data);
         })
         .catch((err) => {
           console.log(err);
@@ -65,7 +65,8 @@ export default function Dashboard() {
   }
 
   const user = localStorage.getItem("user");
-  if (!user) {
+
+  if (!userState) {
     history.push("/login");
   }
 
@@ -73,7 +74,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    actions.getCurrent().then(
+    console.log("in use effect" + userState);
+    actions.getCurrent(userState).then(
       (response) => {
         setContent(response.data);
       },
@@ -114,8 +116,8 @@ export default function Dashboard() {
             Update
           </Button>
         </Form>
-        
-		<Card>
+
+        <Card>
           <h2 className="text-center mb-4">Next Identifier</h2>
 
           <Button varient="link" onClick={handleNext}>
